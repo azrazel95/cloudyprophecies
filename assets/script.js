@@ -18,7 +18,6 @@ btn.on("click", apiGetter)
 function apiGetter(event){
     event.preventDefault();
     var api = "https://api.openweathermap.org/data/2.5/weather?q=" + searchLoc.val() + "&appid=78e1806e46a60decb6a154f57a6b79ea&&units=imperial"
-    console.log(api)
     fetch(api)
 .then(function(response){
     
@@ -30,50 +29,9 @@ function apiGetter(event){
     currentTemp.html(`Temp: ${data.main.temp}F°`);
     currentHum.html(`Humidity: ${data.main.humidity}%`);
     currentWind.html(`Wind: ${data.wind.speed}mp/h`);
-    console.log(data);
     var lon = data.coord.lon;
     var lat = data.coord.lat;
     var fiveDay = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=78e1806e46a60decb6a154f57a6b79ea&&units=imperial`;
-    // var fiveDayTitle = [
-    //     day0Title = $("#day0Title"),
-    //     day1Title = $("#day1Title"),
-    //     day2Title = $("#day2Title"),
-    //     day3Title = $("#day3Title"),
-    //     day4Title = $("#day4Title"),
-    // ]
-    // var fiveDayIcon = [
-    //     day0Icon = $("#day0Icon"),
-    //     day1Icon = $("#day1Icon"),
-    //     day2Icon = $("#day2Icon"),
-    //     day3Icon = $("#day3Icon"),
-    //     day4Icon = $("#day4Icon"),
-    // ]
-    // var fiveDayTemps = [
-    //     day0Temp = $("#day0Temperature"),
-    //     day1Temp = $("#day1Temperature"),
-    //     day2Temp = $("#day2Temperature"),
-    //     day3Temp = $("#day3Temperature"),
-    //     day4Temp = $("#day4Temperature"),
-        
-    // ]
-    // var fiveDayHum = [
-    //     day0Hum = $("#day0Humidity"),
-    //     day1Hum = $("#day1Humidity"),
-    //     day2Hum = $("#day2Humidity"),
-    //     day3Hum = $("#day3Humidity"),
-    //     day4Hum = $("#day4Humidity"),
-       
-    // ]
-    // var fiveDayWind = [
-    //     day0Wind = $("#day0WindSpeed"),
-    //     day1Wind = $("#day1WindSpeed"),
-    //     day2Wind = $("#day2WindSpeed"), 
-    //     day3Wind = $("#day3WindSpeed"),
-    //     day4Wind = $("#day4WindSpeed"),
-    // ]
-    // var fiveDayForecast = new array (fiveDayTitle, fiveDayIcon, fiveDayTemps, fiveDayHum, fiveDayWind);
-    
-
     var day0 = new Array(
         day0Title = $("#day0Title"),
         day0Icon = $("#day0Icon"),
@@ -110,24 +68,43 @@ function apiGetter(event){
         day4Wind = $("#day4WindSpeed"),
     );
 
-    var fiveDayForecast = new Array(
+    var fiveDaycards = new Array(
         day0,
         day1,
         day2,
         day3,
         day4
     )
-    
+
     fetch(fiveDay)
     .then(function (response){
         return response.json();
     })
     .then(function(forecastData){
-        console.log(forecastData)
+        console.log("data", forecastData)
+        var dailyList = new Array(
+            first = $(forecastData.list[5]),
+            second = $(forecastData.list[13]),
+            third = $(forecastData.list[21]),
+            fourth = $(forecastData.list[29]),
+            fifth = $(forecastData.list[37]),
+        )
+        console.log("daily", dailyList)
+        console.log("obj", fiveDaycards)
+        for(var i=0; i<fiveDaycards.length; i++){
+            console.log(dailyList[i]);
+            
+            
+            for (var j=0; j<i; j++)
+            console.log(i)
+            fiveDaycards[i][0].html(`${forecastData.city.name}${moment(dailyList[i][0].dt, "X").format("(MM/DD/YYYY)")}`);
+            fiveDaycards[i][1].html(`<img src="http://openweathermap.org/img/wn/${forecastData.list[i].weather[0].icon}@2x.png">`);
+            fiveDaycards[i][2].html(`Temp: ${dailyList[i][0].main.temp}F°`)
+            fiveDaycards[i][3].html(`Humidity: ${dailyList[i][0].main.humidity}%`)
+            fiveDaycards[i][4].html(`Wind: ${dailyList[i][0].wind.speed}mp/h`)
+        }
     })
-    for(i=0; i<forecast.length; i++){
-        
-        // forecast[i].children[0].html(`${data.name}`)
-    }
+    
 })
 }
+
